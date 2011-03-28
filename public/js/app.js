@@ -4,9 +4,11 @@
   });
 }).call(this);
 
-function focusOnDiv( divId ){
-   divElement = document.getElementById( divId );
-   if(divElement!= null && typeof(divElement) != 'undefined'){
-      divElement.focus();
-   }
-}
+var focusOnDiv;
+focusOnDiv = function(divId) {
+  var divElement;
+  divElement = document.getElementById(divId);
+  if (divElement !== null && typeof divElement !== 'undefined') {
+    return divElement.focus();
+  }
+};
