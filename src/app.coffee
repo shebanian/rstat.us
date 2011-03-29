@@ -1,6 +1,7 @@
 $(document).ready ->
   $("#flash").delay(2000).slideUp('slow')
 
-focusOnDiv = (divId) -> 
+focusOnDiv = (divId) ->
   divElement = document.getElementById(divId);
-  divElement .focus() if divElement != null && typeof(divElement ) != 'undefined'
+  divElement.focus() if divElement != null and typof(divElement) != 'undefined'
+  return
