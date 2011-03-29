@@ -96,6 +96,7 @@ class Update
 
   def send_to_external_accounts
     return if ENV['RACK_ENV'] == 'development'
+
     if author.user
       if self.twitter? && author.user.twitter?
         begin
