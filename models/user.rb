@@ -6,7 +6,7 @@ class User
 
   # Make the username required
   # However, this will break it when email authorization is used
-  key :username, String #, :unique => true
+  key :username, String #:unique => true
   key :perishable_token, String
 
   key :email, String #, :unique => true, :allow_nil => true
@@ -15,22 +15,29 @@ class User
   validates_uniqueness_of :email, :allow_nil => :true 
   validates_uniqueness_of :username, :allow_nil => :true 
 
+  # validate users don't have @ in their usernames
+  validate :no_at
+
   belongs_to :author
   belongs_to :feed
 
   after_create :finalize
 
+  # After a user is created create the feed, add yourself as a follower and
+  # reset the token
   def finalize
     create_feed
     follow_yo_self
     reset_perishable_token
   end
 
+  # Generate a multi-use token for account confirmation and password resets
   def set_perishable_token
     self.perishable_token = Digest::MD5.hexdigest( rand.to_s )
     save
   end
 
+  # Reset the perishable token
   def reset_perishable_token
     self.perishable_token = nil
     save
@@ -40,6 +47,7 @@ class User
     feed.local? ? "/users/#{feed.author.username}" : feed.author.url
   end
   
+
   def twitter?
     has_authorization?(:twitter)
   end
@@ -56,15 +64,15 @@ class User
     get_authorization(:facebook)
   end
   
+  # Check if a a user has a certain authorization by providing the assoaciated
+  # provider
   def has_authorization?(auth)
     a = Authorization.first(:provider => auth.to_s, :user_id => self.id)
-    if a.nil?
-      return false
-    else
-      return true
-    end
+    #return false if not authenticated and true otherwise.
+    !a.nil?
   end
   
+  # Get an authorization by providing the assoaciated provider
   def get_authorization(auth)
     Authorization.first(:provider => auth.to_s, :user_id => self.id)
   end
@@ -122,7 +130,7 @@ class User
       f = Feed.first(:id => feed_id)
     end
 
-    if f == nil
+    if f.nil?
       false
     else
       following.include? f
@@ -131,18 +139,18 @@ class User
 
   timestamps!
 
-  def timeline(opts)
+  def timeline(params)
     popts = {
-      :page => opts[:page],
-      :per_page => opts[:per_page]
+      :page => params[:page],
+      :per_page => params[:per_page]
     }
     Update.where(:author_id => following.map(&:author_id)).order(['created_at', 'descending']).paginate(popts)
   end
 
-  def at_replies(opts)
+  def at_replies(params)
     popts = {
-      :page => opts[:page],
-      :per_page => opts[:per_page]
+      :page => params[:page],
+      :per_page => params[:per_page]
     }
     Update.where(:text => /^@#{username}\b/).order(['created_at', 'descending']).paginate(popts)
   end
@@ -163,7 +171,7 @@ class User
   def set_password_reset_token
     self.password_reset_sent = DateTime.now
     set_perishable_token
-    return self.perishable_token
+    self.perishable_token
   end
   
   # Set a new password, clear the date the password reset token was sent and
@@ -212,5 +220,12 @@ class User
     following << feed
     followers << feed
     save
+  end
+
+  # validation that checks @s in usernames
+  def no_at
+    unless (username =~ /@/).nil?
+      errors.add(:username, "can't have @.") 
+    end
   end
 end
