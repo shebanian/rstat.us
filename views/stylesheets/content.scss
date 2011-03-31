@@ -19,19 +19,19 @@
         @include clearfix;
         padding-top: 0.25em;
       }
-      .avatar, .userinfo, .profileavatar {
+      .avatar, .userinfo, .profile.avatar {
         float: left;
       }
-      .avatar, .profileavatar {
+      .avatar, .profile.avatar {
         width: 48px;
         img {
           width: 48px;
         }
       }
-      .showuserinfo {
+      .show.userinfo {
         margin-left:58px;
       }
-      .profileavatar
+      .profile.avatar
         margin-right:10px;
       }
       .note {
@@ -39,7 +39,7 @@
         margin-top: 5px;
         margin-bottom: 5px;
       }
-      .divnote
+      .holder
         width:550px;
         background-color: #fcfcfc;
       }
