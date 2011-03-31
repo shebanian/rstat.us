@@ -93,3 +93,4 @@ class UserTest < MiniTest::Unit::TestCase
   end
 
 end
+
