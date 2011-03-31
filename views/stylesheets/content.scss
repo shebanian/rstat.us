@@ -19,14 +19,29 @@
         @include clearfix;
         padding-top: 0.25em;
       }
-      .avatar, .userinfo {
+      .avatar, .userinfo, .profileavatar {
         float: left;
       }
-      .avatar {
+      .avatar, .profileavatar {
         width: 48px;
         img {
           width: 48px;
         }
+      }
+      .showuserinfo {
+        margin-left:58px;
+      }
+      .profileavatar
+        margin-right:10px;
+      }
+      .note {
+        padding:10px;	
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+      .divnote
+        width:550px;
+        background-color: #fcfcfc;
       }
       .userinfo {
         .nickname {
